@@ -7,11 +7,10 @@ DEBUG = True
 MAX_DEPTH = 3
 MAX_LINKS = 10
 
-print('Starting...')
 robot_url = "https://en.wikipedia.org/wiki/Robot"
 prefix = "https://en.wikipedia.org"
 
-def crawl(url, g, depth, visited):
+def crawl_rec(url, g, depth, visited):
     if depth > MAX_DEPTH:
         return
     visited.add(url)
@@ -36,15 +35,9 @@ def crawl(url, g, depth, visited):
     if len(urls) > 0:
         for link in urls:
             if link not in visited:
-                crawl(link, g, depth, visited)
+                crawl_rec(link, g, depth, visited)
 
-
-depth = 0
-visited = set()
-g = nx.DiGraph()
-g.add_node(robot_url)
-crawl(robot_url, g, depth, visited)
-print('number of nodes: ' + str(g.number_of_nodes()))
-print('number of edges: ' + str(g.number_of_edges()))
-nx.draw(g, with_labels=True)
-plt.show()
+def crawl():              
+    graph = nx.DiGraph()
+    graph.add_node(robot_url)
+    return crawl_rec(robot_url, graph, 0, set())
